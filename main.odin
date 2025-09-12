@@ -14,6 +14,7 @@ Entity :: struct {
 	velocity:                 rl.Vector2,
 	texture:                  rl.Texture2D,
 	x_remainder, y_remainder: f32,
+	facing_right:             bool,
 }
 
 main :: proc() {
@@ -63,7 +64,7 @@ main :: proc() {
 		rl.BeginMode2D(world_space_camera)
 
 		// Draw player
-		rl.DrawTextureV(world.player.texture, world.player.position, rl.WHITE)
+		draw_player(world.player)
 
 		draw_tilemap(&world)
 		draw_editor(&editor, &world, &world_space_camera, virtual_ratio)

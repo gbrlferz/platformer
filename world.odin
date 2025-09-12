@@ -47,6 +47,7 @@ create_world :: proc() -> World {
 		velocity    = {0, 0},
 		x_remainder = 0,
 		y_remainder = 0,
+		facing_right = true,
 	}
 	append(&world.entities, player)
 	world.player = &world.entities[len(world.entities) - 1]

@@ -17,8 +17,10 @@ update_player :: proc(player: ^Entity, world: ^World, delta: f32) {
 	// Player input
 	if rl.IsKeyDown(.LEFT) {
 		player.velocity.x = -MOVE_SPEED
+		player.facing_right = false
 	} else if rl.IsKeyDown(.RIGHT) {
 		player.velocity.x = MOVE_SPEED
+		player.facing_right = true
 	} else {
 		player.velocity.x = 0
 	}
@@ -29,4 +31,16 @@ update_player :: proc(player: ^Entity, world: ^World, delta: f32) {
 
 	move_x(player, world, player.velocity.x) // Added world reference
 	move_y(player, world, player.velocity.y) // Added world reference
+}
+
+draw_player :: proc(player: ^Entity) {
+	player_source := rl.Rectangle{0, 0, f32(player.texture.width), f32(player.texture.height)}
+	player_dest := rl.Rectangle{player.position.x, player.position.y, player.size.x, player.size.y}
+	
+	// Flip sprite horizontally if facing left
+	if !player.facing_right {
+		player_source.width = -player_source.width
+	}
+	
+	rl.DrawTexturePro(player.texture, player_source, player_dest, {0, 0}, 0, rl.WHITE)
 }
