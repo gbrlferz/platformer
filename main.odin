@@ -86,5 +86,9 @@ main :: proc() {
 
 		rl.EndDrawing()
 	}
+	
+	// Cleanup resources before closing
+	cleanup_world(&world)
+	rl.UnloadRenderTexture(target)
 	rl.CloseWindow()
 }

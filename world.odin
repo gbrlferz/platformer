@@ -66,3 +66,17 @@ create_world :: proc() -> World {
 
 	return world
 }
+
+cleanup_world :: proc(world: ^World) {
+	// Unload textures to prevent memory leaks
+	rl.UnloadTexture(world.solid_texture)
+	
+	// Clean up player texture
+	if world.player != nil {
+		rl.UnloadTexture(world.player.texture)
+	}
+	
+	// Free dynamic array memory
+	delete(world.entities)
+	delete(world.tilemap.tiles)
+}
