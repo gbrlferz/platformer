@@ -5,6 +5,12 @@ import rl "vendor:raylib"
 MOVE_SPEED :: 3.0
 JUMP_FORCE :: -5.5
 
+is_on_ground :: proc(player: ^Entity, world: ^World) -> bool {
+	test_pos := player.position
+	test_pos.y += 1 // Check one pixel below
+	return check_collision(player, world, test_pos)
+}
+
 update_player :: proc(player: ^Entity, world: ^World, delta: f32) {
 	player.velocity.y += GRAVITY
 
@@ -17,7 +23,7 @@ update_player :: proc(player: ^Entity, world: ^World, delta: f32) {
 		player.velocity.x = 0
 	}
 
-	if rl.IsKeyPressed(.SPACE) {
+	if rl.IsKeyPressed(.SPACE) && is_on_ground(player, world) {
 		player.velocity.y = JUMP_FORCE
 	}
 
