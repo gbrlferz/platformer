@@ -18,7 +18,7 @@ Entity :: struct {
 
 main :: proc() {
 	rl.SetConfigFlags({.WINDOW_RESIZABLE})
-	rl.InitWindow(1280, 720, "Celeste-style Physics")
+	rl.InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Celeste-style Physics")
 
 	target := rl.LoadRenderTexture(VIRTUAL_SCREEN_WIDTH, VIRTUAL_SCREEN_HEIGHT)
 	source_rec := rl.Rectangle{0, 0, f32(target.texture.width), f32(-target.texture.height)}
@@ -30,7 +30,7 @@ main :: proc() {
 	world_space_camera.offset = {f32(VIRTUAL_SCREEN_WIDTH / 2), f32(VIRTUAL_SCREEN_HEIGHT / 2)}
 	world_space_camera.zoom = 1.0
 
-	rl.SetTargetFPS(60)
+	rl.SetTargetFPS(TARGET_FPS)
 	world := create_world()
 	editing := false
 
