@@ -3,17 +3,16 @@ package game
 import rl "vendor:raylib"
 
 World :: struct {
-	entities: [dynamic]Entity,
-	tilemap:  Tilemap,
-	player:   ^Entity,
+	entities:     [dynamic]Entity,
+	tilemap:      Tilemap,
+	player:       ^Entity,
+	solid_texture: rl.Texture2D,
 }
 
 TileType :: enum {
 	EMPTY,
 	SOLID,
 }
-
-solid_texture: rl.Texture2D
 
 Tilemap :: struct {
 	width, height: int,
@@ -32,7 +31,7 @@ draw_tilemap :: proc(world: ^World) {
 				break
 			case .SOLID:
 				rl.DrawRectangleV(pos, {TILE_SIZE, TILE_SIZE}, rl.DARKGRAY)
-				rl.DrawTextureV(solid_texture, pos, rl.WHITE)
+				rl.DrawTextureV(world.solid_texture, pos, rl.WHITE)
 			}
 		}
 	}
@@ -48,6 +47,7 @@ create_world :: proc() -> World {
 		velocity    = {0, 0},
 		x_remainder = 0,
 		y_remainder = 0,
+		facing_right = true,
 	}
 	append(&world.entities, player)
 	world.player = &world.entities[len(world.entities) - 1]
@@ -62,7 +62,21 @@ create_world :: proc() -> World {
 		world.tilemap.tiles[8 * 40 + x] = .SOLID
 	}
 
-	solid_texture = rl.LoadTexture("assets/ground.png")
+	world.solid_texture = rl.LoadTexture("assets/ground.png")
 
 	return world
+}
+
+cleanup_world :: proc(world: ^World) {
+	// Unload textures to prevent memory leaks
+	rl.UnloadTexture(world.solid_texture)
+	
+	// Clean up player texture
+	if world.player != nil {
+		rl.UnloadTexture(world.player.texture)
+	}
+	
+	// Free dynamic array memory
+	delete(world.entities)
+	delete(world.tilemap.tiles)
 }

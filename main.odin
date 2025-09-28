@@ -14,11 +14,12 @@ Entity :: struct {
 	velocity:                 rl.Vector2,
 	texture:                  rl.Texture2D,
 	x_remainder, y_remainder: f32,
+	facing_right:             bool,
 }
 
 main :: proc() {
 	rl.SetConfigFlags({.WINDOW_RESIZABLE})
-	rl.InitWindow(1280, 720, "Celeste-style Physics")
+	rl.InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Celeste-style Physics")
 
 	target := rl.LoadRenderTexture(VIRTUAL_SCREEN_WIDTH, VIRTUAL_SCREEN_HEIGHT)
 	source_rec := rl.Rectangle{0, 0, f32(target.texture.width), f32(-target.texture.height)}
@@ -30,7 +31,7 @@ main :: proc() {
 	world_space_camera.offset = {f32(VIRTUAL_SCREEN_WIDTH / 2), f32(VIRTUAL_SCREEN_HEIGHT / 2)}
 	world_space_camera.zoom = 1.0
 
-	rl.SetTargetFPS(60)
+	rl.SetTargetFPS(TARGET_FPS)
 	world := create_world()
 	editing := false
 
@@ -63,7 +64,7 @@ main :: proc() {
 		rl.BeginMode2D(world_space_camera)
 
 		// Draw player
-		rl.DrawTextureV(world.player.texture, world.player.position, rl.WHITE)
+		draw_player(world.player)
 
 		draw_tilemap(&world)
 		draw_editor(&editor, &world, &world_space_camera, virtual_ratio)
@@ -86,5 +87,9 @@ main :: proc() {
 
 		rl.EndDrawing()
 	}
+	
+	// Cleanup resources before closing
+	cleanup_world(&world)
+	rl.UnloadRenderTexture(target)
 	rl.CloseWindow()
 }
