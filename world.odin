@@ -3,9 +3,9 @@ package game
 import rl "vendor:raylib"
 
 World :: struct {
-	entities:     [dynamic]Entity,
-	tilemap:      Tilemap,
-	player:       ^Entity,
+	entities:      [dynamic]Entity,
+	tilemap:       Tilemap,
+	player:        ^Entity,
 	solid_texture: rl.Texture2D,
 }
 
@@ -41,12 +41,8 @@ create_world :: proc() -> World {
 	world: World
 
 	player := Entity {
-		position    = {0, 0},
-		texture     = rl.LoadTexture("assets/player.png"),
-		size        = {16, 20},
-		velocity    = {0, 0},
-		x_remainder = 0,
-		y_remainder = 0,
+		position     = {0, 0},
+		size         = {16, 20},
 		facing_right = true,
 	}
 	append(&world.entities, player)
@@ -68,14 +64,8 @@ create_world :: proc() -> World {
 }
 
 cleanup_world :: proc(world: ^World) {
-	// Unload textures to prevent memory leaks
 	rl.UnloadTexture(world.solid_texture)
-	
-	// Clean up player texture
-	if world.player != nil {
-		rl.UnloadTexture(world.player.texture)
-	}
-	
+
 	// Free dynamic array memory
 	delete(world.entities)
 	delete(world.tilemap.tiles)

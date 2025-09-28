@@ -9,17 +9,18 @@ GRAVITY :: 0.5
 editor: Editor
 
 Entity :: struct {
-	position:                 rl.Vector2,
-	size:                     rl.Vector2,
-	velocity:                 rl.Vector2,
-	texture:                  rl.Texture2D,
-	x_remainder, y_remainder: f32,
-	facing_right:             bool,
+	position:     [2]i32,
+	size:         [2]i32,
+	remainder:    [2]f32,
+	velocity:     rl.Vector2,
+	facing_right: bool,
 }
 
 main :: proc() {
 	rl.SetConfigFlags({.WINDOW_RESIZABLE})
-	rl.InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Celeste-style Physics")
+	rl.InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Platformer")
+
+	player_texture := rl.LoadTexture("assets/player.png")
 
 	target := rl.LoadRenderTexture(VIRTUAL_SCREEN_WIDTH, VIRTUAL_SCREEN_HEIGHT)
 	source_rec := rl.Rectangle{0, 0, f32(target.texture.width), f32(-target.texture.height)}
@@ -46,7 +47,7 @@ main :: proc() {
 			f32(rl.GetScreenHeight()) + (virtual_ratio * 2),
 		}
 
-		if rl.IsKeyPressed(.F2) {
+		if rl.IsKeyPressed(.F1) {
 			editor.active = !editor.active
 		}
 
@@ -54,7 +55,10 @@ main :: proc() {
 
 		if !editor.active {
 			screen_space_camera.zoom = 1.0
-			world_space_camera.target = world.player.position + world.player.size * 0.5
+			world_space_camera.target = {
+				f32(world.player.position.x + (world.player.size.x / 2)),
+				f32(world.player.position.y + (world.player.size.y / 2)),
+			}
 		}
 
 		update_editor(&editor, &world, &world_space_camera, virtual_ratio)
@@ -64,7 +68,7 @@ main :: proc() {
 		rl.BeginMode2D(world_space_camera)
 
 		// Draw player
-		draw_player(world.player)
+		draw_player(world.player, player_texture)
 
 		draw_tilemap(&world)
 		draw_editor(&editor, &world, &world_space_camera, virtual_ratio)
@@ -79,16 +83,13 @@ main :: proc() {
 		rl.DrawTexturePro(target.texture, source_rec, dest_rec, origin, 0, rl.WHITE)
 		rl.EndMode2D()
 
-		rl.DrawFPS(10, 10)
-
 		if editor.active {
 			rl.DrawText("Editing", 10, 10, 20, rl.WHITE)
 		}
 
 		rl.EndDrawing()
 	}
-	
-	// Cleanup resources before closing
+
 	cleanup_world(&world)
 	rl.UnloadRenderTexture(target)
 	rl.CloseWindow()

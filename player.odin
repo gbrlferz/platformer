@@ -29,18 +29,23 @@ update_player :: proc(player: ^Entity, world: ^World, delta: f32) {
 		player.velocity.y = JUMP_FORCE
 	}
 
-	move_x(player, world, player.velocity.x) // Added world reference
-	move_y(player, world, player.velocity.y) // Added world reference
+	move_x(player, player.velocity.x, world)
+	move_y(player, world, player.velocity.y)
 }
 
-draw_player :: proc(player: ^Entity) {
-	player_source := rl.Rectangle{0, 0, f32(player.texture.width), f32(player.texture.height)}
-	player_dest := rl.Rectangle{player.position.x, player.position.y, player.size.x, player.size.y}
-	
+draw_player :: proc(player: ^Entity, texture: rl.Texture) {
+	player_source := rl.Rectangle{0, 0, f32(texture.width), f32(texture.height)}
+	player_dest := rl.Rectangle {
+		f32(player.position.x),
+		f32(player.position.y),
+		f32(player.size.x),
+		f32(player.size.y),
+	}
+
 	// Flip sprite horizontally if facing left
 	if !player.facing_right {
 		player_source.width = -player_source.width
 	}
-	
-	rl.DrawTexturePro(player.texture, player_source, player_dest, {0, 0}, 0, rl.WHITE)
+
+	rl.DrawTexturePro(texture, player_source, player_dest, {0, 0}, 0, rl.WHITE)
 }

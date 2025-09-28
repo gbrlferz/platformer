@@ -3,54 +3,52 @@ package game
 import "core:math"
 import rl "vendor:raylib"
 
-move_x :: proc(entity: ^Entity, world: ^World, amount: f32) {
-	entity.x_remainder += amount
-	move := i32(round(entity.x_remainder))
+move_x :: proc(using entity: ^Entity, amount: f32, world: ^World) {
+	remainder.x += amount
+	move := i32(remainder.x)
 
 	if move != 0 {
-		entity.x_remainder -= f32(move)
+		remainder.x -= f32(move)
 		sign := i32(math.sign(f32(move)))
 
 		for move != 0 {
-			test_pos := entity.position
-			test_pos.x += f32(sign)
+			test_pos := position
+			test_pos.x += sign
 
 			if !check_collision(entity, world, test_pos) {
-				entity.position.x += f32(sign)
+				entity.position.x += sign
 				move -= sign
 			} else {
-				// Collision callback?
 				break
 			}
 		}
 	}
 }
 
-move_y :: proc(entity: ^Entity, world: ^World, amount: f32) {
-	entity.y_remainder += amount
-	move := i32(round(entity.y_remainder))
+move_y :: proc(using entity: ^Entity, world: ^World, amount: f32) {
+	remainder.y += amount
+	move := i32(remainder.y)
 
 	if move != 0 {
-		entity.y_remainder -= f32(move)
+		remainder.y -= f32(move)
 		sign := i32(math.sign(f32(move)))
 
 		for move != 0 {
-			test_pos := entity.position
-			test_pos.y += f32(sign)
+			test_pos := position
+			test_pos.y += sign
 
 			if !check_collision(entity, world, test_pos) {
-				entity.position.y += f32(sign)
+				entity.position.y += sign
 				move -= sign
 			} else {
-				entity.velocity.y = 0
 				break
 			}
 		}
 	}
 }
 
-check_collision :: proc(entity: ^Entity, world: ^World, pos: rl.Vector2) -> bool {
-	test_box := rl.Rectangle{pos.x, pos.y, entity.size.x, entity.size.y}
+check_collision :: proc(entity: ^Entity, world: ^World, pos: [2]i32) -> bool {
+	test_box := rl.Rectangle{f32(pos.x), f32(pos.y), f32(entity.size.x), f32(entity.size.y)}
 
 	for y in 0 ..< world.tilemap.height {
 		for x in 0 ..< world.tilemap.width {

@@ -81,6 +81,10 @@ draw_editor :: proc(
 	}
 
 	for entity in world.entities {
-		rl.DrawRectangleV(entity.position, entity.size, {0, 0, 255, 100})
+		rl.DrawRectangleV(
+			{f32(entity.position.x), f32(entity.position.y)},
+			f32(entity.size.x),
+			{0, 0, 255, 100},
+		)
 	}
 }
