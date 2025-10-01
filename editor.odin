@@ -3,23 +3,16 @@ package game
 import "core:math"
 import rl "vendor:raylib"
 
-Editor :: struct {
-	active: bool,
-}
 
 update_editor :: proc(
 	editor: ^Editor,
-	world: ^World,
+	world: ^Level,
 	world_camera: ^rl.Camera2D,
 	virtual_ratio: f32,
 ) {
-	if !editor.active {
-		return
-	}
+	if !editor.active {return}
 	mouse_screen := rl.GetMousePosition()
-
 	virtual_mouse := rl.Vector2{mouse_screen.x / virtual_ratio, mouse_screen.y / virtual_ratio}
-
 	mouse_world := rl.GetScreenToWorld2D(virtual_mouse, world_camera^)
 
 	if rl.IsMouseButtonDown(.MIDDLE) {
@@ -31,27 +24,36 @@ update_editor :: proc(
 		}
 	}
 
-	tile_x := int(mouse_world.x / TILE_SIZE)
-	tile_y := int(mouse_world.y / TILE_SIZE)
+	mouse_tile := [2]i32 {
+		i32(math.floor(mouse_world.x / 18) * 18),
+		i32(math.floor(mouse_world.y / 18) * 18),
+	}
 
-	if tile_x >= 0 &&
-	   tile_x < world.tilemap.width &&
-	   tile_y >= 0 &&
-	   tile_y < world.tilemap.height {
+	default_solid := Solid {
+		position = {mouse_tile.x, mouse_tile.y},
+		size     = {18, 18},
+	}
 
-		idx := tile_y * world.tilemap.width + tile_x
-		if rl.IsMouseButtonDown(.LEFT) {
-			world.tilemap.tiles[idx] = .SOLID
+	if rl.IsMouseButtonDown(.LEFT) {
+		for solid in world.solids {
+			if solid.position == mouse_tile {
+				return
+			}
 		}
-		if rl.IsMouseButtonDown(.RIGHT) {
-			world.tilemap.tiles[idx] = .EMPTY
+		append(&world.solids, default_solid)
+	}
+	if rl.IsMouseButtonDown(.RIGHT) {
+		for &solid, i in world.solids {
+			if solid.position == mouse_tile {
+				unordered_remove(&world.solids, i)
+			}
 		}
 	}
 }
 
 draw_editor :: proc(
 	editor: ^Editor,
-	world: ^World,
+	world: ^Level,
 	world_camera: ^rl.Camera2D,
 	virtual_ratio: f32,
 ) {
@@ -65,25 +67,12 @@ draw_editor :: proc(
 	tile_x := int(mouse_world.x / TILE_SIZE)
 	tile_y := int(mouse_world.y / TILE_SIZE)
 
-	if tile_x >= 0 &&
-	   tile_x < world.tilemap.width &&
-	   tile_y >= 0 &&
-	   tile_y < world.tilemap.height {
-
-		hover_rect := rl.Rectangle {
-			x      = f32(tile_x * TILE_SIZE),
-			y      = f32(tile_y * TILE_SIZE),
-			width  = TILE_SIZE,
-			height = TILE_SIZE,
-		}
-
-		rl.DrawRectangleLinesEx(hover_rect, 2, rl.YELLOW)
-	}
-
 	for entity in world.entities {
-		rl.DrawRectangleV(
-			{f32(entity.position.x), f32(entity.position.y)},
-			f32(entity.size.x),
+		rl.DrawRectangle(
+			entity.position.x,
+			entity.position.y,
+			entity.size.x,
+			entity.size.y,
 			{0, 0, 255, 100},
 		)
 	}

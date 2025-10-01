@@ -5,13 +5,13 @@ import rl "vendor:raylib"
 MOVE_SPEED :: 3.0
 JUMP_FORCE :: -5.5
 
-is_on_ground :: proc(player: ^Entity, world: ^World) -> bool {
+is_on_ground :: proc(player: ^Entity, world: ^Level) -> bool {
 	test_pos := player.position
 	test_pos.y += 1 // Check one pixel below
 	return check_collision(player, world, test_pos)
 }
 
-update_player :: proc(player: ^Entity, world: ^World, delta: f32) {
+update_player :: proc(player: ^Entity, world: ^Level, delta: f32) {
 	player.velocity.y += GRAVITY
 
 	// Player input
