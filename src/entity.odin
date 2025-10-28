@@ -1,4 +1,4 @@
-package mushrun
+package platformer
 
 import "core:math"
 import rl "vendor:raylib"

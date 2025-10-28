@@ -10,7 +10,7 @@
 	},
 	"iid": "b5bf5560-8560-11f0-a3b7-010d0c482e05",
 	"jsonVersion": "1.5.3",
-	"appBuildId": 473703,
+	"appBuildId": 489243,
 	"nextUid": 36,
 	"identifierStyle": "Capitalize",
 	"toc": [],
@@ -1057,20 +1057,6 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Player",
-							"__grid": [38,15],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": { "tilesetUid": 25, "x": 0, "y": 0, "w": 24, "h": 24 },
-							"__smartColor": "#BE4A2F",
-							"iid": "34985de0-8560-11f0-a3b7-8fe46220e2d3",
-							"width": 18,
-							"height": 18,
-							"defUid": 24,
-							"px": [684,270],
-							"fieldInstances": []
-						},
-						{
 							"__identifier": "Goal",
 							"__grid": [1,10],
 							"__pivot": [0,0],
@@ -1124,6 +1110,20 @@
 							"height": 18,
 							"defUid": 34,
 							"px": [252,126],
+							"fieldInstances": []
+						},
+						{
+							"__identifier": "Player",
+							"__grid": [41,16],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": { "tilesetUid": 25, "x": 0, "y": 0, "w": 24, "h": 24 },
+							"__smartColor": "#BE4A2F",
+							"iid": "fd93cc00-ac70-11f0-b161-75d62facc31b",
+							"width": 18,
+							"height": 18,
+							"defUid": 24,
+							"px": [738,288],
 							"fieldInstances": []
 						}
 					]
