@@ -9,11 +9,11 @@ CAMERA_SMOOTH_SPEED :: 8.0
 init_game_state :: proc(level_path: string, level_index: int) -> GameState {
 	game_state := GameState {
 		player = init_player(),
-		tileset = rl.LoadTexture("assets/tilemap.png"),
+		tileset = rl.LoadTexture("../assets/tilemap.png"),
 		camera = {offset = {VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2}, zoom = 1},
 		animations = make(map[PlayerState][]rl.Rectangle),
-		jump_sound = rl.LoadSound("assets/sounds/jump.wav"),
-		coin_sound = rl.LoadSound("assets/sounds/coin.wav"),
+		jump_sound = rl.LoadSound("../assets/sounds/jump.wav"),
+		coin_sound = rl.LoadSound("../assets/sounds/coin.wav"),
 	}
 
 	game_state.animations[.RUN] = make([]rl.Rectangle, 2)

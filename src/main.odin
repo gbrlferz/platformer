@@ -31,18 +31,21 @@ Mode :: enum {
 }
 
 main :: proc() {
+	rl.SetConfigFlags({.WINDOW_HIGHDPI, .WINDOW_RESIZABLE})
 	rl.InitWindow(1280, 720, "raylib LDtk loader")
 	rl.InitAudioDevice()
 	rl.SetTargetFPS(60)
 
 	current_level := 0
-	game_state := init_game_state("platformer.ldtk", current_level)
+	game_state := init_game_state("../platformer.ldtk", current_level)
 	current_mode: Mode = .TITLE
 	next_mode: Mode
 	best_time: f32 = 500.0
 
 	target_texture := rl.LoadRenderTexture(VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 	transition_timer: f32
+
+	spring := Entity{}
 
 	for !rl.WindowShouldClose() {
 		dt := rl.GetFrameTime()
@@ -51,7 +54,7 @@ main :: proc() {
 		case .TITLE:
 			if rl.IsKeyPressed(.ENTER) {
 				transition_to(&current_mode, &next_mode, .GAMEPLAY)
-				game_state = init_game_state("platformer.ldtk", current_level)
+				game_state = init_game_state("../platformer.ldtk", current_level)
 			}
 
 			rl.BeginDrawing()
@@ -83,7 +86,7 @@ main :: proc() {
 
 			if rl.IsKeyPressed(.R) {
 				transition_to(&current_mode, &next_mode, .GAMEPLAY)
-				game_state = init_game_state("platformer.ldtk", current_level)
+				game_state = init_game_state("../platformer.ldtk", current_level)
 			}
 
 			if game_state.player.active == false {

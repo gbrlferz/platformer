@@ -31,7 +31,7 @@ PlayerState :: enum {
 init_player :: proc() -> Player {
 	return Player {
 		size = {12, 18},
-		sprite = rl.LoadTexture("assets/tilemap-characters.png"),
+		sprite = rl.LoadTexture("../assets/tilemap-characters.png"),
 		facing = 1,
 		active = true,
 	}
